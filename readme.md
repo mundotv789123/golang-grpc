@@ -7,3 +7,6 @@ Resumindo todas as regras:
 - Os métodos devem retornar apenas um valor, e isso deve ser de errortipo.
 
 Ref: https://medium.com/@shivambhadani_/introduction-to-rpc-in-go-building-rpc-client-and-server-with-golang-5794675e9a12
+
+
+Curso seguido: https://www.youtube.com/playlist?list=PLm-xZWCprwYRwL0efB8pvlR0lO-GnqtwD
