@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net"
+	"net/http"
 	"net/rpc"
 	"os"
 )
@@ -39,25 +39,24 @@ func main() {
 func runServer() {
 	exemplo := new(Exemplo)
 	rpc.Register(exemplo)
+	rpc.HandleHTTP()
 
 	port := 5000
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	fmt.Printf("Servidor rodando na porta: %d\n", port)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer listen.Close()
-
-	fmt.Printf("Servidor rodando na porta: %d\n", port)
-	rpc.Accept(listen)
 }
 
 func runCliente() {
-	client, err := rpc.Dial("tcp", "localhost:5000")
+	client, err := rpc.DialHTTP("tcp", "localhost:5000")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Close()
+	fmt.Println("Conectado")
 
 	for true {
 		reader := bufio.NewReader(os.Stdin)
@@ -68,7 +67,7 @@ func runCliente() {
 		var result Reply
 		err = client.Call("Exemplo.Hello", args, &result)
 		if err != nil {
-			log.Fatal("Error", err)
+			log.Fatal("Error: ", err)
 		}
 
 		fmt.Printf("result: %s\n", result.Result)
